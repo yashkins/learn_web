@@ -22,7 +22,7 @@ def get_python_news():
             date = news.find('time').text
             result_news.append({'title':title,'url':url,'date':date})
         return result_news
-    return false
+    return False
 
 
 
