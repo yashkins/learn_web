@@ -26,7 +26,7 @@
         <div class="col-4">
             <h2>Прогноз погоды</h2>        
             {% if weather %}
-                темп: {{weahter.temp_C}}, ощущается как: {{weahter.FeelsLikeC}}  
+                темп: {{weather.temp_C}}, ощущается как: {{weather.FeelsLikeC}}  
             {% else %} 
                 Сервис погоды времено не доступен
             {% endif %}

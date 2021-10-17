@@ -1,8 +1,9 @@
+from flask import current_app
 import requests
 
 def weather_by_city(city_name):
-    weather_url = "http://api.worldweatheronline.com/premium/v1/weather.ashx"
-    params = {"key": "846bc400028b44cbb82133616212309",
+    weather_url = current_app.config['WEATHER_URL']
+    params = {"key": current_app.config['WEATHER_DEFAULT_CITY'],
         "q": city_name,
         "format": "json",
         "num_of_days": 1,
