@@ -28,8 +28,10 @@ def get_python_news():
             save_news(title, url, published)
 
 def save_news(title, url, published):
-    new_news = News(title=title, url=url, published=published)
-    db.session.add(new_news)
-    db.session.commit()
+    news_exists = News.query.filter(News.url==url).count()
+    if not news_exists:
+        new_news = News(title=title, url=url, published=published)
+        db.session.add(new_news)
+        db.session.commit()
 
 
