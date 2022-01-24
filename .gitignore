@@ -4,4 +4,4 @@ env/
 config.py
 *txt
 python.org.html
-*.db
+.db
