@@ -22,7 +22,7 @@ def process_login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             flash('Вы успешно зашли на сайт')
-            return redirect(url_for('index'))
+            return redirect(url_for('news.index'))
 
     flash('Неверное имя пользователя или пароль')
     return redirect(url_for('user.login'))
@@ -31,4 +31,4 @@ def process_login():
 def logout():
     logout_user()
     flash('Вы успешно разлогинились')
-    return redirect(url_for('index'))  
+    return redirect(url_for('news.index'))  

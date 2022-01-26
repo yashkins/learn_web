@@ -2,7 +2,8 @@ from getpass import getpass
 import sys
 
 from webapp import create_app
-from webapp.model import Users, db
+from webapp.db import db
+from webapp.user.models import Users
 
 app = create_app()
 
@@ -16,7 +17,7 @@ with app.app_context():
     password = getpass('Введите пароль')
     password2 = getpass('Повторите пароль')
     
-    if not password==password2:
+    if not password == password2:
         print('Пароли неодинаковые')
         sys.exit(0)
 
