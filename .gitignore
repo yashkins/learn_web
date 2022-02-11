@@ -6,3 +6,6 @@ config.py
 python.org.html
 *.db
 for test.py
+*.dat
+*.bak
+*.dir
