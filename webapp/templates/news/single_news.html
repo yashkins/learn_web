@@ -3,7 +3,23 @@
 {% block content %}
     <div class='row'>
         <div class="col-8 news-content news-content_img">
-          {{ news.text|safe }}
+            {{ news.text|safe }}
+
+            {% if news.comments %}
+                <h3>Комментрии:</h3>
+                {% for comment in news.comments %}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">{{ comment.text }}</p>
+                        <p class="card-text">
+                            <small>Опубликованно: {{ comment.created.strftime('%d.%m.%Y') }} |
+                                Автор: {{ comment.user.username }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="col-4">
             <h2>Другие новости</h2>        
