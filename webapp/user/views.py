@@ -4,6 +4,7 @@ from flask_login import current_user, login_user, logout_user
 from webapp.db import db
 from webapp.user.models import Users
 from webapp.user.forms import LoginForm, RegistrationForm
+from webapp.utils import get_redirect_target
 
 blueprint = Blueprint('user', __name__, url_prefix='/user')
 
@@ -24,7 +25,7 @@ def process_login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             flash('Вы успешно зашли на сайт')
-            return redirect(url_for('news.index'))
+            return redirect(get_redirect_target())
 
     flash('Неверное имя пользователя или пароль')
     return redirect(url_for('user.login'))
