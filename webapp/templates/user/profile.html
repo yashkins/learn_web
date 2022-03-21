@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    {% include('messages.html') %}
+    <div class='row no-gutters'>
+        <div class="col-2">
+            <img src="https://filin.mail.ru/pic?email=yashkins1982%40mail.ru&width=180&height=180&name=Яков+Рязанов&version=4&build=7&_=1647682809556.651" 
+            vspace="7" hspace="0" width="125" height="125">  
+        </div>
+        <div class="col-6">
+            <h4><span class="letter">Имя: </span>{{ user.username }}</h4>
+            <h4><span class="letter">Эл. почта: </span>{{ user.email }}</h4>
+            {% if user.about_me %}
+                <h4><span class="letter">Обо мне: </span>{{ user.about_me }}</h4> 
+            {% endif %}
+            {% if user.last_seen %}
+                <h4><span class="letter">Последнее посещение: </span>{{ user.last_seen }}</h4> 
+            {% endif %}
+            <br>
+        </div>  
+        <div class="col-2"></div>  
+        <div class="w-100"></div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <br>
+            <br>
+            <br>
+            {% if current_user.username == user.username %}
+                <a class="btn btn-primary" href="{{ url_for('user.edit_profile') }}" role="button">Редактировать</a> 
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

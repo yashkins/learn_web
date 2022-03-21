@@ -11,12 +11,13 @@
                 {% for comment in news.comments %}
                 <div class="card">
                     <div class="card-body">
+                        <img src="https://filin.mail.ru/pic?email=yashkins1982%40mail.ru&width=180&height=180&name=Яков+Рязанов&version=4&build=7&_=1647682809556.651" width="36" height="36">
                         <p class="card-text">{{ comment.text }}</p>
                     </div>
                 </div>
                 <p class="card-text">
                     <small>Опубликованно: {{ comment.created.strftime('%d.%m.%Y в %H:%M') }} |
-                        Автор: {{ comment.user.username }}
+                        Автор: <a href="{{ url_for('user.profile',username=comment.user.username) }}">{{ comment.user.username }}</a>
                     </small>
                 </p>  
                 <br/>

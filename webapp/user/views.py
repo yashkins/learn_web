@@ -1,9 +1,9 @@
-from turtle import title
-from flask import Blueprint, Flask, render_template, flash, redirect, url_for
-from flask_login import current_user, login_user, logout_user 
+
+from flask import Blueprint, Flask, render_template, flash, redirect, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user 
 from webapp.db import db
 from webapp.user.models import Users
-from webapp.user.forms import LoginForm, RegistrationForm
+from webapp.user.forms import EditProfileForm, LoginForm, RegistrationForm
 from webapp.utils import get_redirect_target
 
 blueprint = Blueprint('user', __name__, url_prefix='/user')
@@ -60,3 +60,30 @@ def process_reg():
                 flash("Ошибка в поле {}: {}".format(getattr(form,field).label.text, error))
 
         return redirect(url_for('user.registration'))
+
+@blueprint.route('/profile/<username>')
+@login_required
+def profile(username):
+    user = Users.query.filter_by(username=username).first_or_404()
+    title = 'Страница профиля'
+    return render_template('user/profile.html', page_title=title, user=user)
+
+@blueprint.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm(current_user.username, current_user.email)
+    title = 'Редактирование профиля'
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash('Ваши изменения сохранены')
+        return redirect(url_for('user.profile', username=current_user.username))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        form.about_me.data = current_user.about_me
+    return render_template('user/edit_profile.html', page_title=title, form=form)
+    
+

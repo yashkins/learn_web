@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms import BooleanField, StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 
 from webapp.user.models import Users
 
@@ -27,3 +27,23 @@ class RegistrationForm(FlaskForm):
         if count_user:
             raise ValidationError('Пользователь с такой эл. почтой уже зарегистрирован')
             
+class EditProfileForm(FlaskForm):
+    username = StringField('Имя пользователя', validators=[DataRequired()], render_kw={"class":"form-control"})
+    email = StringField('Электронная почта', validators=[DataRequired(), Email()], render_kw={"class":"form-control"})
+    about_me = TextAreaField('Обо мне', validators=[Length(min=0, max=140)], render_kw={"class":"form-control"})
+    submit = SubmitField('Сохранить', render_kw={"class":"btn btn-primary"})
+
+    def __init__(self, original_username, original_email, *args, **kwargs):
+        super(EditProfileForm,self).__init__(*args, **kwargs)
+        self.original_username = original_username
+        self.original_email = original_email
+
+    def validate_username(self, username):
+        count_user = Users.query.filter(Users.username==username.data, Users.username.notin_([self.original_username])).count()
+        if count_user:
+            raise ValidationError("Пользователь с таким именем уже существует")
+
+    def validate_email(self, email):
+        count_user = Users.query.filter(Users.email==email.data, Users.email.notin_([self.original_email])).count()
+        if count_user:
+            raise ValidationError('Пользователь с такой эл. почтой уже зарегистрирован')

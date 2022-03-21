@@ -1,6 +1,7 @@
 
+from datetime import datetime
 from flask import Flask
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user 
 from flask_migrate import Migrate
 from webapp.db import db
 from webapp.admin.views import blueprint as admin_blueprint
@@ -26,6 +27,12 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return Users.query.get(user_id)
+    
+    @app.before_request
+    def before_request():
+        if current_user.is_authenticated:
+            current_user.last_seen = datetime.utcnow()
+            db.session.commit()
 
 
     return app
