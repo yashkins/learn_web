@@ -26,7 +26,7 @@ def single_news(news_id):
 
 @blueprint.route('/news/comment', methods=['POST'])
 @login_required
-def add_comment():
+def add_comment(): 
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comments(text=form.comment_text.data, news_id=form.news_id.data, user_id=current_user.id)

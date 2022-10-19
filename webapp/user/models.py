@@ -1,6 +1,9 @@
 from datetime import datetime
+from flask import current_app
 from flask_login import UserMixin
+import jwt
 from hashlib import md5
+from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from webapp.db import db
 
@@ -23,6 +26,17 @@ class Users(db.Model,UserMixin):
         mail = self.email
         digest = md5(mail.lower().encode('utf-8')).hexdigest()
         return 'https//www.qravatar.com/avatar/{}?d=mp&s={}'.format(digest,size)
+
+    def get_reset_password_token(self, expires_en=600):
+        return jwt.encode({'reset_password':self.id,'exp':time()+expires_en}, current_app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8') 
+    
+    @staticmethod
+    def verifi_reset_passsword_token(token):
+        try:
+            id = jwt.decode(token,current_app.config['SECRET_KEY'], algoritms=['HS256'])['reset_password']
+        except:
+            return
+        return Users.query.get(id)
 
     @property
     def is_admin(self):

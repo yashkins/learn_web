@@ -47,3 +47,14 @@ class EditProfileForm(FlaskForm):
         count_user = Users.query.filter(Users.email==email.data, Users.email.notin_([self.original_email])).count()
         if count_user:
             raise ValidationError('Пользователь с такой эл. почтой уже зарегистрирован')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Укажите вашу электронную почту', validators=[DataRequired(), Email()], render_kw={'class':'form-control'})
+    submit = SubmitField('Отправить', render_kw={'class':'btn btn-primary'})
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Введите новый пароль',validators=[DataRequired()],render_kw={'class':'form-control'})
+    password2 = PasswordField('Повторите пароль',validators=[DataRequired(),EqualTo('password')],render_kw={'class':'form-control'})
+    submit = SubmitField('Сохранить', render_kw={'class':'btn btn-primary'})
+
+    

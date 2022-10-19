@@ -9,3 +9,4 @@ for test.py
 *.dat
 *.bak
 *.dir
+run_for_flask_shell.bat

@@ -1,9 +1,10 @@
 
 from flask import Blueprint, Flask, render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user 
+from webapp.mail import mail_for_reset_password
 from webapp.db import db
 from webapp.user.models import Users
-from webapp.user.forms import EditProfileForm, LoginForm, RegistrationForm
+from webapp.user.forms import EditProfileForm, LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from webapp.utils import get_redirect_target
 
 blueprint = Blueprint('user', __name__, url_prefix='/user')
@@ -85,5 +86,34 @@ def edit_profile():
         form.email.data = current_user.email
         form.about_me.data = current_user.about_me
     return render_template('user/edit_profile.html', page_title=title, form=form)
-    
+
+@blueprint.route('/reset_password_request', methods=['GET','POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('news.index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.data).first()
+        if user:
+            mail_for_reset_password(user)
+        flash('На адрес вашей электронной почты отправленна инструкция для смены пароля')
+    title = 'Запрос на смену пароля'
+    return render_template('user/reset_password_request.html', form=form, page_title=title)
+
+@blueprint.route('/reset_passowrd/<token>', methods=['GET','POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('news.index'))
+    user = Users.verifi_reset_passsword_token(token)
+    if not user:
+        flash('Некорретная или устаревшая ссылка. Попробуйте запросить новую ссылку')
+        return redirect(url_for('user.reset_password_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Пароль успешно сохранен')
+        return redirect(url_for('user.login'))
+    title = 'Смена пароля'
+    return render_template('user/reset_password.html', form=form, page_title=title)
 
