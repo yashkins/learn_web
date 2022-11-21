@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <p class="card-text">
-                    <small>Опубликованно: {{ comment.created.strftime('%d.%m.%Y в %H:%M') }} |
+                    <small>Опубликованно: {{ momentjs(comment.created).format('DD.MM.YYYY [в] HH:mm:ss') }} |
                         Автор: <a href="{{ url_for('user.profile',username=comment.user.username) }}">{{ comment.user.username }}</a>
                     </small>
                 </p>  

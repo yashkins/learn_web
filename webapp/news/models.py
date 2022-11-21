@@ -18,7 +18,7 @@ class News(db.Model):
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.now())    
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())    
     news_id = db.Column(
         db.Integer,
         db.ForeignKey('news.id', ondelete='CASCADE'),

@@ -15,7 +15,7 @@
                 <h4><span class="letter">Обо мне: </span>{{ user.about_me }}</h4> 
             {% endif %}
             {% if user.last_seen %}
-                <h4><span class="letter">Последнее посещение: </span>{{ user.last_seen }}</h4> 
+                <h4><span class="letter">Последнее посещение: </span>{{ momentjs(user.last_seen).calendar() }}</h4> 
             {% endif %}
             <br>
         </div>  

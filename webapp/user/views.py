@@ -20,7 +20,6 @@ def login():
 @blueprint.route('/process-login', methods=['POST'])
 def process_login():
     form = LoginForm()
-
     if form.validate_on_submit():
         user = Users.query.filter(Users.username == form.username.data).first()
         if user and user.check_password(form.password.data):
